@@ -10,7 +10,7 @@ def search_tft_userInfo(arg, RIOT_TOKEN):
 
     if res.status_code == 200:
         UserIconUrl = "http://ddragon.leagueoflegends.com/cdn/11.3.1/img/profileicon/{}.png"
-        embed = discord.Embed(title=f"플레이어 {resjs['name']} 님의 정보", description=f"**{resjs['summonerLevel']} LEVEL**", color=0xFF9900)
+        embed = discord.Embed(title=f"플레이어 {resjs['name']} 님의 정보", description=f"**{resjs['summonerLevel']} LEVEL**", color=0x9CDEF8)
 
         UserInfoUrl_2 = "https://kr.api.riotgames.com/tft/league/v1/entries/by-summoner/" + resjs["id"]
         res_2 = requests.get(UserInfoUrl_2, headers={"X-Riot-Token":RIOT_TOKEN})
@@ -32,5 +32,5 @@ def search_tft_userInfo(arg, RIOT_TOKEN):
         return embed
 
     else:
-        error = discord.Embed(title="존재하지 않는 소환사명입니다.\n다시 한번 확인해주세요.", color=0xFF9900)
+        error = discord.Embed(title="존재하지 않는 소환사명입니다.\n다시 한번 확인해주세요.", color=0xEF5A68)
         return error
