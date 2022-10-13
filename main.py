@@ -14,6 +14,8 @@ import lib.search_lol_userInfo as search_lol_userInfo
 import lib.search_tft_userInfo as search_tft_userInfo
 import lib.recommendfood as recommendfood
 
+import lib.user as user
+
 load_dotenv()
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 RIOT_TOKEN = "RGAPI-8a42353b-0e5d-47dc-8730-1de8741c79f9"
@@ -58,8 +60,12 @@ async def cmd6(ctx, arg):
     await ctx.send(embed = embed)
 
 
-@bot.command("롤체전적검색")
+@bot.command(name= "롤체전적검색")
 async def cmd7(ctx, arg):
     await ctx.send(embed = search_tft_userInfo.search_tft_userInfo(arg, RIOT_TOKEN))
+
+@bot.command(name= "계좌개설")
+async def cmd8(ctx):
+    user.signup(ctx.author.name, ctx.author.id)
 
 bot.run(DISCORD_TOKEN)
