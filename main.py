@@ -67,5 +67,6 @@ async def cmd7(ctx, arg):
 @bot.command(name= "계좌개설")
 async def cmd8(ctx):
     user.signup(ctx.author.name, ctx.author.id)
+    await ctx.send(f"계좌 개설 완료")
 
 bot.run(DISCORD_TOKEN)
