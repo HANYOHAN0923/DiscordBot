@@ -14,6 +14,7 @@ from lib.search_lol_userInfo import search_lol_userInfo
 from lib.search_tft_userInfo import search_tft_userInfo
 from lib.leavework import countTime
 from lib.user import signup, findRow, userInfo, delete, getMoney, remit, checkUser
+from lib.lol_cup import search_match
 
 load_dotenv()
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
@@ -42,7 +43,7 @@ async def 명령어(ctx):
     embed.add_field(name = bot.command_prefix + "계좌개설", value = "거래를 위한 계좌를 만듭니다. 기본 자금으로 3000만원을 받습니다.", inline = False)
     embed.add_field(name = bot.command_prefix + "잔고조회", value = "내 계좌의 잔고를 조회합니다", inline = False)
     embed.add_field(name = bot.command_prefix + "정보 @유저이름", value = "특정 유저의 잔고를 조회합니다", inline = False)
-    embed.add_field(name = bot.command_prefix + "송금 @유저이름", value = "현재 오류로 중지된 명령어", inline = False)
+    embed.add_field(name = bot.command_prefix + "송금 @유저이름 금액", value = "특정 유저에게 작성한 금액만큼 송금합니다", inline = False)
     embed.add_field(name = bot.command_prefix + "외화매입/매각 외화이름", value = "추후 추가 예정인 명령어입니다", inline = False)
     embed.add_field(name = bot.command_prefix + "주식매입/매각 주식이름", value = "추후 추가 예정인 명령어입니다", inline = False)
     embed.add_field(name = bot.command_prefix + "코인매입/매각 코인이름", value = "추후 추가 예정인 명령어입니다", inline = False)
@@ -86,6 +87,10 @@ async def cmd7(ctx, arg):
 @bot.command(name="퇴근")
 async def cmd8(ctx):
     await ctx.send(countTime())
+
+@bot.command(name="롤드컵")
+async def cmd9(ctx):
+    await ctx.send(embed = search_match())
 
 @bot.command(name="!p")
 async def cmExtra(ctx):
