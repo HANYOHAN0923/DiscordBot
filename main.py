@@ -13,8 +13,10 @@ from lib.recommendfood import recommendfood
 from lib.search_lol_userInfo import search_lol_userInfo
 from lib.search_tft_userInfo import search_tft_userInfo
 from lib.leavework import countTime
-from lib.user import signup, findRow, userInfo, delete, getMoney, remit, checkUser
+from lib.user import *
 from lib.lol_cup import search_match
+from lib.gamble import *
+from lib.patch_note import patch_note
 
 load_dotenv()
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
@@ -91,6 +93,14 @@ async def cmd8(ctx):
 @bot.command(name="롤드컵")
 async def cmd9(ctx):
     await ctx.send(embed = search_match())
+
+@bot.command(name="오분가")
+async def cmd10(ctx):
+    await ctx.send(file=discord.File("./assets/images/obunga.jpg"))
+
+@bot.command(name="패치노트")
+async def cmd11(ctx):
+    await ctx.send(embed = patch_note())
 
 @bot.command(name="!p")
 async def cmExtra(ctx):
@@ -182,6 +192,102 @@ async def 송금(ctx, user: discord.User, money):
             await ctx.send("돈이 충분하지 않습니다. 현재 자산: " + str(s_money))
 
         print("------------------------------\n")
+
+@bot.command()
+async def reset(ctx):
+    delete()
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.send("명령어를 찾지 못했습니다")
+
+@bot.command()
+async def 도박(ctx, money):
+    userExistance, userRow = checkUser(ctx.author.name, ctx.author.id)
+    win = gamble()
+    result = ""
+    betting = 0
+    _color = 0x000000
+    if userExistance:
+        print("DB에서 ", ctx.author.name, "을 찾았습니다.")
+        cur_money = getMoney(ctx.author.name, userRow)
+
+        if money == "올인":
+            betting = cur_money
+            if win:
+                result = "성공"
+                _color = 0x00ff56
+                print(result)
+
+                modifyMoney(ctx.author.name, userRow, int(0.5*betting))
+
+            else:
+                result = "실패"
+                _color = 0xFF0000
+                print(result)
+
+                modifyMoney(ctx.author.name, userRow, -int(betting))
+                addLoss(ctx.author.name, userRow, int(betting))
+
+            embed = discord.Embed(title = "도박 결과", description = result, color = _color)
+            embed.add_field(name = "배팅금액", value = betting, inline = False)
+            embed.add_field(name = "현재 자산", value = getMoney(ctx.author.name, userRow), inline = False)
+
+            await ctx.send(embed=embed)
+            
+        elif int(money) >= 10:
+            if cur_money >= int(money):
+                betting = int(money)
+                print("배팅금액: ", betting)
+                print("")
+
+                if win:
+                    result = "성공"
+                    _color = 0x00ff56
+                    print(result)
+
+                    modifyMoney(ctx.author.name, userRow, int(0.5*betting))
+
+                else:
+                    result = "실패"
+                    _color = 0xFF0000
+                    print(result)
+
+                    modifyMoney(ctx.author.name, userRow, -int(betting))
+                    addLoss(ctx.author.name, userRow, int(betting))
+
+                embed = discord.Embed(title = "도박 결과", description = result, color = _color)
+                embed.add_field(name = "배팅금액", value = betting, inline = False)
+                embed.add_field(name = "현재 자산", value = getMoney(ctx.author.name, userRow), inline = False)
+
+                await ctx.send(embed=embed)
+
+            else:
+                print("돈이 부족합니다.")
+                print("배팅금액: ", money, " | 현재자산: ", cur_money)
+                await ctx.send("돈이 부족합니다. 현재자산: " + str(cur_money))
+        else:
+            print("배팅금액", money, "가 10보다 작습니다.")
+            await ctx.send("최소 배팅 단위는 10원 입니다")
+    else:
+        print("DB에서 ", ctx.author.name, "을 찾을 수 없습니다")
+        await ctx.send("도박은 계좌개설 후 이용 가능합니다.")
+
+    print("------------------------------\n")
+
+@bot.command()
+async def 랭킹(ctx):
+    rank = ranking()
+    embed = discord.Embed(title = "랭킹", description = None, color = 0x4A44FF)
+
+    for i in range(0,len(rank)):
+        if i%2 == 0:
+            name = rank[i]
+            money = rank[i+1]
+            embed.add_field(name = str(int(i/2+1))+"위 "+name, value ="레벨: "+str(money), inline=False)
+
+    await ctx.send(embed=embed) 
 
 @bot.command()
 async def reset(ctx):

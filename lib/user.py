@@ -3,6 +3,7 @@ from openpyxl import load_workbook, Workbook
 c_name = 1
 c_id = 2
 c_money = 3
+c_loss = 6
 
 default_money = 30000000
 
@@ -196,3 +197,58 @@ def delete():
     saveFile()
 
     print("데이터 삭제 완료")
+
+def addLoss(_target, _row, _amount):
+    print("user.py - addLoss")
+    loadFile()
+
+    print(_target, "의 잃은 돈 추가")
+    print(_target, "의 잃은돈: " + str(ws.cell(_row, c_loss).value))
+    print("추가할 액수: ", _amount)
+    ws.cell(_row, c_loss).value += _amount
+
+    print("잃은 돈 추가 완료")
+    print(_target, "의 총 잃은 돈: ", ws.cell(_row, c_loss).value)
+
+    saveFile()
+
+#=========================Ranking==================================
+def ranking():
+    print("user.py - ranking")
+
+    loadFile()
+
+    userRanking =  {}
+    userNum = checkUserNum()
+
+    print("등록된 유저수: ", userNum)
+    print("")
+
+    print("랭킹 집계중")
+
+    for row in range(2, 2+userNum):
+        _name = ws.cell(row, c_name).value
+        _lvl = ws.cell(row, c_money).value
+        userRanking[_name] = _lvl
+
+    print("랭킹 집계 완료")
+    a = sorted(userRanking.items(), reverse=True, key=lambda item:item[1])
+    result = []
+    for items in a:
+        result.append(items[0])
+        result.append(items[1])
+    print(result)
+    print("")
+
+    return result
+
+def getRank(_row):
+    print("user.py - getRank")
+    user = ws.cell(_row, c_name).value
+    print(user, "의 랭킹 조사")
+    rank = ranking()
+
+    result = int(rank.index(user)/2)+1
+    print(user, "의 랭킹: ",result, "위")
+
+    return result
