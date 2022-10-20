@@ -32,7 +32,7 @@ async def on_ready():
 
 @bot.command()
 async def 명령어(ctx):
-    embed = discord.Embed(title = "Obunga Bot#1375", description = "열구가 좋아 죽습니다", color = 0x6E17E3) 
+    embed = discord.Embed(title = "Obunga Bot#1375", description = "오분가 봇이 시크릿 주주 서버와 함께 합니다", color = 0x6E17E3) 
     embed.add_field(name = bot.command_prefix + "명령어", value = "Obunga Bot의 명령어를 확인합니다", inline = False)
     embed.add_field(name = bot.command_prefix + "탈모빔 유저이름", value = "특정 유저에게 탈모빔을 날립니다. 확률이 존재합니다.", inline = False)
     embed.add_field(name = bot.command_prefix + "갓겜판독기 게임이름", value = "특정게임이 갓겜인지 알려줍니다.", inline = False)
@@ -46,6 +46,10 @@ async def 명령어(ctx):
     embed.add_field(name = bot.command_prefix + "잔고조회", value = "내 계좌의 잔고를 조회합니다", inline = False)
     embed.add_field(name = bot.command_prefix + "정보 @유저이름", value = "특정 유저의 잔고를 조회합니다", inline = False)
     embed.add_field(name = bot.command_prefix + "송금 @유저이름 금액", value = "특정 유저에게 작성한 금액만큼 송금합니다", inline = False)
+    embed.add_field(name = bot.command_prefix + "패치노트", value = "패치 내역을 확인합니다", inline = False)
+    embed.add_field(name = bot.command_prefix + "오분가", value = "열구의 발작 버튼입니다. 그의 본능을 깨우지마세요.", inline = False)
+    embed.add_field(name = bot.command_prefix + "랭킹", value = "현재 보유 자산을 기준으로 유저들의 랭킹을 보여줍니다.", inline = False)
+    embed.add_field(name = bot.command_prefix + "도박 배팅금액", value = "도박을 통해 성공을 하면 배팅 금액을 잃을 수도, 배팅금액의 1.5배의 금액을 얻을 수도 있습니다.\n 최소 배팅 금액은 10원이며 당첨확률은 3분의 1입니다. \n 금액 대신 올인을 작성하는 것을 통해 전재산을 배팅할 수 있습니다", inline = False)
     embed.add_field(name = bot.command_prefix + "외화매입/매각 외화이름", value = "추후 추가 예정인 명령어입니다", inline = False)
     embed.add_field(name = bot.command_prefix + "주식매입/매각 주식이름", value = "추후 추가 예정인 명령어입니다", inline = False)
     embed.add_field(name = bot.command_prefix + "코인매입/매각 코인이름", value = "추후 추가 예정인 명령어입니다", inline = False)
