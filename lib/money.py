@@ -1,20 +1,50 @@
 import requests
 from bs4 import BeautifulSoup as bs
 
-forex = {
-    '달러': 'https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&query=달러&oquery=환율&tqi=hzMlFsp0J1Zssmwilk0ssssst84-408509',
-    '엔화': 'https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&query=엔화&oquery=달러&tqi=hzMlqdp0YihssSfeUe8sssssty8-318354',
-    '위안화': 'https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&query=위안화&oquery=엔화&tqi=hzMlrdp0YiRssi6L1h4ssssssXw-518438',
-    '유로': 'https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&query=유로&oquery=위안화&tqi=hzMlVsp0J1ZssmYlNLsssssssdl-354957',
+URL = "https://obank.kbstar.com/quics?page=C101423&QSL=F"
+
+for_cur_exchange = {
+    "달러": 0,
+    "엔화": 1,
+    "위안화": 9,
+    "유로": 2,
+    "파운드": 3,
+    "헤알": 31,
+    "루블": 21,
+    "루피": 24
 }
 
-def foreignCurrency(ctx):
-    page = requests.get(forex[ctx])
-    soup = bs(page.text, "html.parser")
+def foreignCurrency(arg):
+    # URL에 요청 보내기
+    session = requests.Session()
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit 537.36 (KHTML, like Gecko) Chrome",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+    }
+    html = session.get(URL, headers=headers).content
+    soup = bs(html, "html.parser")
 
-    find_currency_span = soup.find('div', 'rate_tlt')
-    str_currency_span = str(find_currency_span)
-    str_currency_span_splitList = str_currency_span.split('strong')
-    str_currency_select = str_currency_span_splitList[1]
-    str_currency = str_currency_select.strip("/"">""<")
-    return str_currency
+    # 외화 정보 가져오기
+    table = soup.find_all("table","tType01")
+    target_table = table[1].select_one('tbody')
+    currency_list = list(target_table.find_all("tr"))
+    target_currency_total_info = str(currency_list[for_cur_exchange[arg]])
+
+    # 외화 정보에서 매수, 매도만 가져옴 (문자열 잘르기)
+    target_currency_total_info_split = target_currency_total_info.split('"tRight')
+    target_currency = target_currency_total_info_split[4:6]
+
+    target_currency_status = []
+    for x in target_currency:
+        a = x.replace('">','')
+        b = a.replace('</td>\n<td class=','')
+        c = b.replace(',','')
+        target_currency_status.append(c)
+
+    buy_cur = target_currency_status[0]
+    sell_cur = target_currency_status[1]
+
+    if arg == "엔화":
+        return float(buy_cur) / 100, float(sell_cur) / 100
+
+    return float(buy_cur), float(sell_cur)

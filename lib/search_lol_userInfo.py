@@ -22,12 +22,10 @@ def search_lol_userInfo(arg, RIOT_TOKEN):
         else: # User Ranked
             for rank in res_2js:
                 if rank["queueType"] == "RANKED_SOLO_5x5":
-                    print(rank)
                     embed.add_field(name="솔로랭크", value=f"**티어 : {rank['tier']} {rank['rank']} - {rank['leaguePoints']} LP**\n"
                                                            f"**승 / 패 : {rank['wins']} 승 {rank['losses']} 패**", inline=True)
 
                 else:
-                    print(rank)
                     embed.add_field(name="자유랭크", value=f"**티어 : {rank['tier']} {rank['rank']} - {rank['leaguePoints']} LP**\n"
                                                             f"**승 / 패 : {rank['wins']} 승 {rank['losses']} 패**", inline=True)
 

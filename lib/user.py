@@ -1,4 +1,5 @@
 from openpyxl import load_workbook, Workbook
+from random import *
 
 c_name = 1
 c_id = 2
@@ -7,7 +8,36 @@ c_lvl = 4
 c_exp = 5
 c_loss = 6
 
+# 외화
+c_dollar = 7
+c_yen = 8
+c_yuan = 9
+c_euro = 10
+c_pound = 11
+c_real = 12
+c_ruble = 13
+c_rupee = 14
+
+# 낚시 (미끼)
+c_bait = 15
+
+# Coin
+c_waves = 16
+c_btc = 17
+c_eth = 18
+c_doge = 19
+c_ltc = 20
+c_etc = 21
+c_lunc = 22
+c_sand = 23
+c_bnb = 24
+c_xrp = 25
+
+# Graps of the Undying
+c_graps = 26
+
 default_money = 30000000
+default_foreign_currency = 0
 
 wb = load_workbook("./db/userDB.xlsx")
 ws = wb.active
@@ -104,23 +134,6 @@ def checkRow():
 
     return _result
 
-def signup(_name, _id):
-    loadFile()
-    print("첫번째 빈곳: ", checkRow())
-    _row = checkRow()
-
-    print("데이터 추가 시작")
-    ws.cell(row=_row, column=c_name, value=_name)
-    print("이름 추가 | ",  ws.cell(_row,c_name).value)
-    ws.cell(row=_row, column=c_id, value =hex(_id))
-    print("고유번호 추가 | ", ws.cell(_row,c_id).value)
-    ws.cell(row=_row, column=c_money, value = default_money)
-    print("기본 자금 지급 | ", ws.cell(_row,c_money).value)
-
-    saveFile()
-
-    print("데이터 추가 완료")
-
 #=========================Money==================================
 def getMoney(_name,_row):
     print("user.py - getMoney")
@@ -130,6 +143,18 @@ def getMoney(_name,_row):
 
     result = ws.cell(_row, c_money).value
     print(_name,"의 보유 자산: ", result)
+
+    saveFile()
+
+    return result
+
+def getForeignCurrency(_name, _row, _c):
+    print("user.py - geForeignCurrency")
+    loadFile()
+
+    print(_name, "의 외화를 탐색")
+
+    result = ws.cell(_row, _c).value
 
     saveFile()
 
@@ -152,7 +177,6 @@ def remit(sender, sender_row, receiver, receiver_row, _amount):
 def modifyMoney(_target, _row, _amount):
     print("user.py - modifyMoney")
     loadFile()
-
     print(_target, "의 자산데이터 수정")
     print(_target, "의 자산: " + str(ws.cell(_row, c_money).value))
     print("추가할 액수: ", _amount)
@@ -176,6 +200,33 @@ def addLoss(_target, _row, _amount):
     print(_target, "의 총 잃은 돈: ", ws.cell(_row, c_loss).value)
 
     saveFile()
+
+def buyForeignCurrency(_target, _row, _amount, _c):
+    print("user.py - buyForeignCurrency")
+    loadFile()
+
+    print(_target, "의 외화 자산 데이터 수정")
+    print("추가할 액수: ", _amount)
+
+    ws.cell(_row, _c).value += int(_amount)
+
+    print("자산데이터 수정 완료")
+    
+    saveFile()
+
+def sellForeignCurrency(_target, _row, _amount, _c):
+    print("user.py - sellForeignCurrency")
+    loadFile()
+
+    print(_target, "의 외화 자산 데이터 수정")
+    print("제거할 액수: ", _amount)
+
+    ws.cell(_row, _c).value -= int(_amount)
+
+    print("자산데이터 수정 완료")
+
+    saveFile()
+    return
 
 #=========================Level==================================
 def levelupCheck(_row):
@@ -319,6 +370,28 @@ def Signup(_name, _id):
     ws.cell(row=_row, column=c_loss, value = 0)
     print("초기 손실 설정 | loss:", ws.cell(_row,c_loss).value)
 
+    ws.cell(row=_row, column=c_dollar, value = default_foreign_currency)
+    print("외화 달라 초기화 | ", ws.cell(_row,c_dollar).value)
+    ws.cell(row=_row, column=c_yen, value = default_foreign_currency)
+    print("외화 엔화 초기화 | :", ws.cell(_row,c_yen).value)
+    ws.cell(row=_row, column=c_yuan, value = default_foreign_currency)
+    print("외화 위안화 초기화 | ", ws.cell(_row,c_yuan).value)
+    ws.cell(row=_row, column=c_euro, value = default_foreign_currency)
+    print("외화 유로 초기화 | :", ws.cell(_row,c_euro).value)
+    ws.cell(row=_row, column=c_pound, value = default_foreign_currency)
+    print("외화 파운드 초기화 | ", ws.cell(_row,c_pound).value)
+    ws.cell(row=_row, column=c_real, value = default_foreign_currency)
+    print("외화 헤알 초기화 | loss:", ws.cell(_row,c_real).value)
+    ws.cell(row=_row, column=c_ruble, value = default_foreign_currency)
+    print("외화 루블 초기화 | ", ws.cell(_row,c_ruble).value)
+    ws.cell(row=_row, column=c_rupee, value = default_foreign_currency)
+    print("외화 루피 초기화 | loss:", ws.cell(_row,c_rupee).value)
+
+    print("코인 초기화 작업을 시작합니다.")
+    for index in range(16,30):
+        ws.cell(row=_row, column= index, value = 0)
+    print("코인 초기화 완료")
+
     print("")
 
     saveFile()
@@ -344,6 +417,24 @@ def userInfo(_row):
     _exp = ws.cell(_row,c_exp).value
     _money = ws.cell(_row,c_money).value
     _loss = ws.cell(_row,c_loss).value
+    _dolor = ws.cell(_row, c_dollar).value
+    _yen = ws.cell(_row, c_yen).value
+    _yuan = ws.cell(_row, c_yuan).value
+    _euro = ws.cell(_row, c_euro).value
+    _pound = ws.cell(_row, c_pound).value
+    _real = ws.cell(_row, c_real).value
+    _ruble = ws.cell(_row, c_ruble).value
+    _rupee = ws.cell(_row, c_rupee).value
+    _waves = ws.cell(_row, c_waves).value
+    _btc = ws.cell(_row, c_btc).value
+    _eth = ws.cell(_row, c_eth).value
+    _doge = ws.cell(_row, c_doge).value
+    _ltc = ws.cell(_row, c_ltc).value
+    _etc = ws.cell(_row, c_etc).value
+    _lunc = ws.cell(_row, c_lunc).value
+    _sand = ws.cell(_row, c_sand).value
+    _bnb = ws.cell(_row, c_bnb).value
+    _xrp = ws.cell(_row, c_xrp).value
 
     print("레벨: ", _lvl)
     print("경험치: ", _exp)
@@ -352,4 +443,193 @@ def userInfo(_row):
 
     saveFile()
 
-    return _lvl, _exp, _money, _loss
+    return _lvl, _exp, _money, _loss, _dolor, _yen, _yuan, _euro, _pound, _real, _ruble, _rupee, _waves, _btc, _eth, _doge, _ltc, _etc, _lunc, _sand, _bnb, _xrp
+
+
+#=========================Fishing==================================
+def addBait(_target, _row, _amount):
+    print("user.py - addBait")
+    loadFile()
+    print("추가할 미끼: ", _amount)
+    ws.cell(_row, c_bait).value += int(_amount)
+
+    print("수정된", _target, "의 미끼 개수: ", ws.cell(_row, c_money).value)
+    
+    saveFile()
+
+def checkBait(_row):
+    print("user.py - checkBait")
+    loadFile()
+
+    print("미끼를 탐색")
+    
+    result = int(ws.cell(_row, c_bait).value)
+    print("보유 미끼 수량: ", result)
+
+    # 미끼가 있을 경우
+    if result:
+        return False
+    
+    return True
+
+def delBait(_target, _row):
+    print("user.py - delBait")
+    loadFile()
+    print("낚시: 미끼 1개 사용")
+    ws.cell(_row, c_bait).value -= 1
+
+    print("수정된", _target, "의 미끼 개수: ", ws.cell(_row, c_money).value)
+    
+    saveFile()
+
+#=========================Coin==================================
+
+def getDollar(_name, _row):
+    print("user.py - getDollar")
+    loadFile()
+
+    print(_name, "의 달러를 탐색")
+
+    result = ws.cell(_row, c_dollar).value
+    print(_name, "의 보유 달러: ", result)
+
+    saveFile()
+
+    return result
+
+def getCoin(_name, _row, _coin):
+    print("user.py - getCoin")
+    loadFile()
+
+    print(_name, "의 코인을 탐색")
+
+    if _coin == "웨이브":
+        result = ws.cell(_row, c_waves).value
+        print(_name, "의 보유" + _coin + " : ", result)
+    elif _coin == "비트코인":
+        result = ws.cell(_row, c_btc).value
+        print(_name, "의 보유" + _coin + " : ", result)
+    elif _coin == "이더리움":
+        result = ws.cell(_row, c_eth).value
+        print(_name, "의 보유" + _coin + " : ", result)
+    elif _coin == "도지":
+        result = ws.cell(_row, c_doge).value
+        print(_name, "의 보유" + _coin + " : ", result)
+    elif _coin == "라이트":
+        result = ws.cell(_row, c_ltc).value
+        print(_name, "의 보유" + _coin + " : ", result)
+    elif _coin == "이더리움클래식":
+        result = ws.cell(_row, c_etc).value
+        print(_name, "의 보유" + _coin + " : ", result)
+    elif _coin == "루나클래식":
+        result = ws.cell(_row, c_lunc).value
+        print(_name, "의 보유" + _coin + " : ", result)
+    elif _coin == "샌드박스":
+        result = ws.cell(_row, c_sand).value
+        print(_name, "의 보유" + _coin + " : ", result)
+    elif _coin == "비엔비":
+        result = ws.cell(_row, c_bnb).value
+        print(_name, "의 보유" + _coin + " : ", result)
+    elif _coin == "리플":
+        result = ws.cell(_row, c_xrp).value
+        print(_name, "의 보유" + _coin + " : ", result)
+    else:
+        return 0
+
+    saveFile()
+
+    return result
+
+
+def modifyDollar(_target, _row, _amount):
+    print("user.py - modifyDollar")
+    loadFile()
+    print(_target, "의 달라데이터 수정")
+    print(_target, "의 달라: " + str(ws.cell(_row, c_dollar).value))
+    print("추가할 액수: ", _amount)
+    ws.cell(_row, c_dollar).value += _amount
+
+    print("자산데이터 수정 완료")
+    print("수정된", _target, "의 자산: ", ws.cell(_row, c_dollar).value)
+    
+    saveFile()
+
+def modifyCoin(_target, _row, _amount, _coin):
+    print("user.py - modifyCoin")
+    loadFile()
+    print(_target, "의 코인데이터 수정")
+    print("추가할 액수: ", _amount)
+
+    if _coin == "웨이브":
+        ws.cell(_row, c_waves).value += _amount
+        print("자산데이터 수정 완료")
+        print("수정된", _target, "의 자산: ", ws.cell(_row, c_waves).value)
+    elif _coin == "비트코인":
+        ws.cell(_row, c_btc).value += _amount
+        print("자산데이터 수정 완료")
+        print("수정된", _target, "의 자산: ", ws.cell(_row, c_btc).value)
+    elif _coin == "이더리움":
+        ws.cell(_row, c_eth).value += _amount
+        print("자산데이터 수정 완료")
+        print("수정된", _target, "의 자산: ", ws.cell(_row, c_eth).value)
+    elif _coin == "도지":
+        ws.cell(_row, c_doge).value += _amount
+        print("자산데이터 수정 완료")
+        print("수정된", _target, "의 자산: ", ws.cell(_row, c_doge).value)
+    elif _coin == "라이트":
+        ws.cell(_row, c_ltc).value += _amount
+        print("자산데이터 수정 완료")
+        print("수정된", _target, "의 자산: ", ws.cell(_row, c_ltc).value)
+    elif _coin == "이더리움클래식":
+        ws.cell(_row, c_eth).value += _amount
+        print("자산데이터 수정 완료")
+        print("수정된", _target, "의 자산: ", ws.cell(_row, c_eth).value)
+    elif _coin == "루나클래식":
+        ws.cell(_row, c_lunc).value += _amount
+        print("자산데이터 수정 완료")
+        print("수정된", _target, "의 자산: ", ws.cell(_row, c_lunc).value)
+    elif _coin == "샌드박스":
+        ws.cell(_row, c_sand).value += _amount
+        print("자산데이터 수정 완료")
+        print("수정된", _target, "의 자산: ", ws.cell(_row, c_sand).value)
+    elif _coin == "비엔비":
+        ws.cell(_row, c_bnb).value += _amount
+        print("자산데이터 수정 완료")
+        print("수정된", _target, "의 자산: ", ws.cell(_row, c_bnb).value)
+    elif _coin == "리플":
+        ws.cell(_row, c_xrp).value += _amount
+        print("자산데이터 수정 완료")
+        print("수정된", _target, "의 자산: ", ws.cell(_row, c_xrp).value)
+    else:
+        return 0
+    
+    saveFile()
+
+
+#=========================GrapsOfTheUndying==================================
+def checkGrap(_row):
+    print("user.py - checkGrap")
+    loadFile()
+    result = ws.cell(_row, c_graps).value
+    saveFile()
+    return result
+
+def addGrap(_name, _row, _amount):
+    print("user.py - addGrap")
+    loadFile()
+    print(_name, "에게 착취 사용권을 1개 추가합니다: ")
+    ws.cell(_row, c_graps).value += int(_amount)
+
+    print("추가 완료")
+    
+    saveFile()
+
+def rmGrap(_row):
+    print("user.py - addGrap")
+    loadFile()
+    print("착취 사용권을 1개를 사용합니다")
+    ws.cell(_row, c_graps).value -= 1
+
+    print("사용 완료")
+    
+    saveFile()

@@ -4,7 +4,6 @@ import math
 
 def countTime():
     current_time = datetime.now().strftime("%H:%M:%S")
-    print(current_time)
     current_time_split = current_time.split(":")
     ct_h = current_time_split[0]
     ct_m = current_time_split[1]
