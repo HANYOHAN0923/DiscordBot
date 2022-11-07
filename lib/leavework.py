@@ -12,7 +12,7 @@ def countTime():
     if not datetime.today().weekday() < 5:
         return "휴일이다 병신아"
 
-    if int(ct_h)+9 > 17:
+    if int(ct_h)+9 >= 17:
         return "이징 씨아반"
 
     if  int(ct_h)+9  < 9:
