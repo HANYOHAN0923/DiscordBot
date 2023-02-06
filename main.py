@@ -1,20 +1,13 @@
 from discord.ext import commands
 import discord
-import os
 import tomllib
 
 
 # Custom Python Library
-from lib.sb import sb
 from lib.money import foreignCurrency
-from lib.godgame import godgame
-from lib.hairlossbeam import hairlossbeam
-from lib.recommendfood import recommendfood
 from lib.search_lol_userInfo import search_lol_userInfo
 from lib.search_tft_userInfo import search_tft_userInfo
-from lib.leavework import countTime
 from lib.user_manage import * #from lib.user import * => excel to firestore
-from lib.lol_cup import *
 from lib.gamble import *
 from lib.patch_note import patch_note
 from lib.fishing import *
@@ -24,9 +17,9 @@ from lib.coin import *
 with open("config.toml", mode="rb") as file:
     data = tomllib.load(file)
 
-    DISCORD_TOKEN = data["API_KEY"]["DISCORD_TOKEN"]
-    RIOT_LOL_TOKEN = data["API_KEY"]["RIOT_LOL_TOKEN"]
-    RIOT_TFT_TOKEN = data["API_KEY"]["RIOT_TFT_TOKEN"]
+    DISCORD_TOKEN = data["DISCORD_API_KEY"]["DISCORD_TOKEN"]
+    RIOT_LOL_TOKEN = data["RIOT_API_KEY"]["RIOT_LOL_TOKEN"]
+    RIOT_TFT_TOKEN = data["RIOT_API_KEY"]["RIOT_TFT_TOKEN"]
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -39,18 +32,12 @@ async def on_ready():
 @bot.command()
 async def 명령어(ctx):
     embed = discord.Embed(title = "Obunga Bot#1375", description = "오분가 봇이 시크릿 주주 서버와 함께 합니다", color = 0x6E17E3) 
-    embed.add_field(name = bot.command_prefix + "탈모빔 유저이름", value = "특정 유저에게 탈모빔을 날립니다. 확률이 존재합니다.", inline = False)
-    embed.add_field(name = bot.command_prefix + "갓겜판독기 게임이름", value = "특정게임이 갓겜인지 알려줍니다.", inline = False)
-    embed.add_field(name = bot.command_prefix + "병신판독기 이름", value = "특정 인물이 병신인지 알려줍니다.", inline = False)
-    embed.add_field(name = bot.command_prefix + "메뉴추천 양식 / 한식 / 중식 / 일식 / 아무거나", value = "메뉴를 추천해줍니다", inline = False)
     embed.add_field(name = bot.command_prefix + "롤전적검색 롤닉네임 ", value = "롤 전적 검색 기능입니다. 소환사 이름은 공백 없이 입력해주세요.", inline = False)
     embed.add_field(name = bot.command_prefix + "롤체전적검색 롤닉네임 ", value = "롤체 전적 검색 기능입니다. 소환사 이름은 공백 없이 입력해주세요", inline = False)
-    embed.add_field(name = bot.command_prefix + "퇴근", value = "공붕이들을 위한 퇴근까지 남은 시간을 알려줍니다. 혹시 본인도 직장인이다 하면 알려주세요. 따로 퇴근시간 만들어 드립니다.", inline = False)
     embed.add_field(name = bot.command_prefix + "회원가입", value = "디스코드 신분과 계좌를 만듭니다", inline = False)
     embed.add_field(name = bot.command_prefix + "내정보", value = "내 정보를 조회합니다", inline = False)
     embed.add_field(name = bot.command_prefix + "정보 @유저이름", value = "특정 유저의 잔고를 조회합니다", inline = False)
     embed.add_field(name = bot.command_prefix + "송금 @유저이름 금액", value = "특정 유저에게 작성한 금액만큼 송금합니다", inline = False)
-    embed.add_field(name = bot.command_prefix + "오분가", value = "열구의 발작 버튼입니다. 그의 본능을 깨우지마세요.", inline = False)
     embed.add_field(name = bot.command_prefix + "랭킹", value = "현재 보유 자산과 레벨을 기준으로 유저들의 랭킹을 보여줍니다.", inline = False)
     embed.add_field(name = bot.command_prefix + "낚시", value = "낚시를 합니다. 낚시는 미끼를 필요로 합니다.", inline = False)
     embed.add_field(name = bot.command_prefix + "미끼구매 개수", value = "낚시에 필요한 미끼를 입력한 개수만큼 구입합니다. (1미끼 = 5000)", inline = False)
@@ -65,70 +52,17 @@ async def 명령어(ctx):
     embed.add_field(name = bot.command_prefix + "알까기", value = "낙동강 타조알을 사용하는 명령어입니다.", inline = False)
     await ctx.send(embed=embed)
 
-
-@bot.command(name='탈모빔')
-async def cmd1(ctx, arg):
-    await ctx.send(hairlossbeam(arg))
-
-
-@bot.command(name="갓겜판독기")
-async def cmd2(ctx,arg):
-    await ctx.send(godgame(arg))
-
-
-@bot.command(name="병신판독기")
-async def cmd3(ctx,arg):
-    await ctx.send(sb(arg))
-
-
-@bot.command(name='환율')
-async def cmd4(ctx, arg):
-    buy, sell = foreignCurrency(arg)
-    embed = discord.Embed(title="환율 : " + arg, description = None, color = 0xffff00)
-    embed.add_field(name = "살 때", value = str(buy))
-    embed.add_field(name = "---", value = ":moneybag:")
-    embed.add_field(name = "팔 때", value = str(sell))
-    await ctx.send(embed = embed)
-
-
-@bot.command(name="메뉴추천")
-async def cmd5(ctx, arg):
-    await ctx.send(recommendfood(arg))
-
-
 @bot.command(name='롤전적검색')
 async def cmd6(ctx, arg):
     await ctx.send(embed = search_lol_userInfo(arg, RIOT_LOL_TOKEN))
-
 
 @bot.command(name= "롤체전적검색")
 async def cmd7(ctx, arg):
     await ctx.send(embed = search_tft_userInfo(arg, RIOT_TFT_TOKEN))
 
-@bot.command(name="퇴근")
-async def cmd8(ctx):
-    await ctx.send(countTime())
-
-# LCK 일정으로 바꿔주기 (이적 시즌에는 이적 글 올라오면 바로 가져오기)
-@bot.command(name="롤드컵")
-async def cmd9(ctx):
-    await ctx.send(embed = search_match())
-
-@bot.command(name="오분가")
-async def cmd10(ctx):
-    await ctx.send(file=discord.File("./assets/images/obunga.jpg"))
-
-@bot.command(name="조유리")
-async def cmd10(ctx):
-    await ctx.send(file=discord.File("./assets/images/jyr.jpg"))
-
 @bot.command(name="패치노트")
 async def cmd11(ctx):
     await ctx.send(embed = patch_note())
-
-@bot.command(name="!p")
-async def cmExtra(ctx):
-    pass
 
 @bot.command()
 async def 회원가입(ctx):
@@ -147,23 +81,7 @@ async def 회원가입(ctx):
         print("회원가입이 완료되었습니다.")
         print("------------------------------\n")
         await ctx.send("회원가입이 완료되었습니다.")
-'''
-@bot.command()
-async def 탈퇴(ctx):
-    print("탈퇴가 가능한지 확인합니다.")
-    userExistance, userRow = checkUser(ctx.author.name, ctx.author.id)
-    if userExistance:
-        DeleteAccount(userRow)
-        print("탈퇴가 완료되었습니다.")
-        print("------------------------------\n")
 
-        await ctx.send("탈퇴가 완료되었습니다.")
-    else:
-        print("DB에서 ", ctx.author.name, "을 찾을 수 없습니다")
-        print("------------------------------\n")
-
-        await ctx.send("등록되지 않은 사용자입니다.")
-'''
 @bot.command()
 async def 정보(ctx, user: discord.User):
     userStatus = checkUser(user.name, user.id)
@@ -502,27 +420,6 @@ async def 랭킹(ctx):
     await ctx.send(embed=embed) 
 
 @bot.command()
-async def 미끼구매(ctx, arg):
-    userStatus = checkUser(ctx.author.name, ctx.author.id)
-    total_price = buyBait(arg)
-        
-    if userStatus:
-        cur_money = getMoney(ctx.author.name)
-
-        if total_price > cur_money:
-            print("돈이 부족합니다.")
-            await ctx.send("돈이 부족합니다.")
-
-        else:
-            modifyMoney(ctx.author.name, -total_price)
-            addItem(ctx.author.name, "미끼", int(arg))
-            await ctx.send("미끼 " + arg +"개 구매 성공")
-        
-    else:
-        print("DB에서 ", ctx.author.name, "을 찾을 수 없습니다")
-        await ctx.send("낚시는 회원가입 후 이용 가능합니다.")
-
-@bot.command()
 async def 낚시(ctx):
     userStatus = checkUser(ctx.author.name, ctx.author.id)
 
@@ -724,6 +621,15 @@ async def 낚시(ctx):
     
     await ctx.send(embed=embed)
 
+@bot.command(name='환율')
+async def cmd4(ctx, arg):
+    buy, sell = foreignCurrency(arg)
+    embed = discord.Embed(title="환율 : " + arg, description = None, color = 0xffff00)
+    embed.add_field(name = "살 때", value = str(buy))
+    embed.add_field(name = "---", value = ":moneybag:")
+    embed.add_field(name = "팔 때", value = str(sell))
+    await ctx.send(embed = embed)
+
 @bot.command()
 async def 외화매수(ctx, kind, money):
     userStatus = checkUser(ctx.author.name, ctx.author.id)
@@ -848,30 +754,41 @@ async def 코인매도(ctx, arg, amount):
         print("DB에서 ", ctx.author.name, "을 찾을 수 없습니다")
         await ctx.send("외환거래는 회원가입 후 이용 가능합니다.")
 
-@bot.event
-async def on_message(message):
-    if message.author == bot.user:
-        return
-    if message.content == "!reset":
-        await bot.process_commands(message)
-        return
-    else:
-        userStatus = checkUser(message.author.name, message.author.id)
-        channel = message.channel
-        if userStatus:
-            levelUp, lvl = levelUpCheck(message.author.name)
-            if levelUp:
-                print(message.author, "가 레벨업 했습니다")
-                print("")
-                modifyMoney(message.author.name, int(lvl)*100000)
-                embed = discord.Embed(title = "레벨업", description = None, color = 0x00A260)
-                embed.set_footer(text = f"홀리 쉿~! {message.author.name} {str(lvl)} 레벨 달성!!!")
-                await channel.send(embed=embed)
-            else:
-                modifyExp(message.author.name, 1)
-                print("------------------------------\n")
+@bot.command()
+async def 아이템구매(ctx, item, amount):
+    userStatus = checkUser(ctx.author.name, ctx.author.id)
+    _amount = int(amount)
 
-        await bot.process_commands(message)
+    if userStatus:
+        if item == "바지락칼국수":
+            _money = 500000
+        elif item == "강동완의발포비타민":
+            _money = 1500000
+        elif item == "열구의위스키":
+            _money = 1000000
+        elif item == "낙동강타조알":
+            _money = 700000
+        elif item == "미끼":
+            _money == 5000
+        else:
+            await ctx.send("없는 아이템입니다.")
+            return 0
+
+        cur_money = getMoney(ctx.author.name)
+
+        if _money*_amount > cur_money:
+            print("돈이 부족합니다")
+            await ctx.send("돈이 부족합니다.")
+
+        else:
+            modifyMoney(ctx.author.name, -(_money*_amount))
+            addItem(ctx.author.name, item, _amount)
+            embed = discord.Embed(title="구매 완료", description = "아이템 구매를 성공했습니다", color = 0x50bcdf)
+            embed.add_field(name= "구매 영수증", value="구매 아이템: " + item + " / 개수: " + amount + "/ 금액: " + str(_money*_amount))
+            await ctx.send(embed=embed)
+    else:
+        print("DB에서 ", ctx.author.name, "을 찾을 수 없습니다")
+        await ctx.send("아이템구매는 회원가입 후 이용 가능합니다.")
 
 @bot.command()
 async def 착취(ctx, user: discord.User):
@@ -912,40 +829,6 @@ async def 착취(ctx, user: discord.User):
         embed.add_field(name = "착취 사용 결과", value = "유저" + str(user.name) + "의 자산 " + str(int(n*100)) + "%의 금액 ₩" + str(format(money,',')) + "을 착취했습니다.")
 
         await ctx.send(embed=embed)
-
-@bot.command()
-async def 아이템구매(ctx, item, amount):
-    userStatus = checkUser(ctx.author.name, ctx.author.id)
-    _amount = int(amount)
-
-    if userStatus:
-        if item == "바지락칼국수":
-            _money = 500000
-        elif item == "강동완의발포비타민":
-            _money = 1500000
-        elif item == "열구의위스키":
-            _money = 1000000
-        elif item == "낙동강타조알":
-            _money = 700000
-        else:
-            await ctx.send("없는 아이템입니다.")
-            return 0
-
-        cur_money = getMoney(ctx.author.name)
-
-        if _money*_amount > cur_money:
-            print("돈이 부족합니다")
-            await ctx.send("돈이 부족합니다.")
-
-        else:
-            modifyMoney(ctx.author.name, -(_money*_amount))
-            addItem(ctx.author.name, item, _amount)
-            embed = discord.Embed(title="구매 완료", description = "아이템 구매를 성공했습니다", color = 0x50bcdf)
-            embed.add_field(name= "구매 영수증", value="구매 아이템: " + item + " / 개수: " + amount + "/ 금액: " + str(_money*_amount))
-            await ctx.send(embed=embed)
-    else:
-        print("DB에서 ", ctx.author.name, "을 찾을 수 없습니다")
-        await ctx.send("아이템구매는 회원가입 후 이용 가능합니다.")
 
 @bot.command()
 async def 협박(ctx, user: discord.User):
@@ -1003,5 +886,30 @@ async def 알까기(ctx):
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         pass
+
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
+    if message.content == "!reset":
+        await bot.process_commands(message)
+        return
+    else:
+        userStatus = checkUser(message.author.name, message.author.id)
+        channel = message.channel
+        if userStatus:
+            levelUp, lvl = levelUpCheck(message.author.name)
+            if levelUp:
+                print(message.author, "가 레벨업 했습니다")
+                print("")
+                modifyMoney(message.author.name, int(lvl)*100000)
+                embed = discord.Embed(title = "레벨업", description = None, color = 0x00A260)
+                embed.set_footer(text = f"홀리 쉿~! {message.author.name} {str(lvl)} 레벨 달성!!!")
+                await channel.send(embed=embed)
+            else:
+                modifyExp(message.author.name, 1)
+                print("------------------------------\n")
+
+        await bot.process_commands(message)
 
 bot.run(DISCORD_TOKEN)

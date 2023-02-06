@@ -1,11 +1,5 @@
 from random import randint, choice
 
-price_bait = 5000
-
-def buyBait(arg):
-    ea = int(arg)
-    return price_bait * ea
-
 def bkFishing():
     normalList = ["전어","고등어","굴비","붕어","정어리","넙치","꽁치","우럭","숭어","갈치","오징어","문어"]
     normal = {
