@@ -10,7 +10,6 @@ URL = {
     "이더리움클래식" : "https://coinmarketcap.com/currencies/ethereum-classic/",
     "루나클래식" : "https://coinmarketcap.com/currencies/terra-luna/",
     "샌드박스" : "https://coinmarketcap.com/currencies/the-sandbox/",
-    "비엔비" : "https://coinmarketcap.com/currencies/bnb/",
     "리플" : "https://coinmarketcap.com/currencies/xrp/",
 }
 

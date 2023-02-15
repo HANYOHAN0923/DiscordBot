@@ -15,10 +15,12 @@ db = firestore.client()
 #=========================Account==================================
 def checkUser(_name, _id):
     print("user.py - checkUser()")
-    # DB에 없는 유저는 NameError가 발생합니다
     try:
-        find_user = db.collection(u'users').document(_name)
-        if _id == find_user.get().to_dict()['id']:
+        find_user_ref = db.collection(u'users').document(_name)
+        find_user = find_user_ref.get()
+        if find_user.exists:
+            return True
+        elif _id == find_user.to_dict()['id']:
             return True
         else:
             return False

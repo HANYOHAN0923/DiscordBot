@@ -36,6 +36,14 @@ c_xrp = 25
 # Graps of the Undying
 c_graps = 26
 
+# ITEM
+c_wisky = 27
+c_vitamin = 28
+c_bk = 29
+c_kc = 30
+c_rkc = 31
+c_ostrich = 32
+
 default_money = 30000000
 default_foreign_currency = 0
 
@@ -445,43 +453,6 @@ def userInfo(_row):
 
     return _lvl, _exp, _money, _loss, _dolor, _yen, _yuan, _euro, _pound, _real, _ruble, _rupee, _waves, _btc, _eth, _doge, _ltc, _etc, _lunc, _sand, _bnb, _xrp
 
-
-#=========================Fishing==================================
-def addBait(_target, _row, _amount):
-    print("user.py - addBait")
-    loadFile()
-    print("추가할 미끼: ", _amount)
-    ws.cell(_row, c_bait).value += int(_amount)
-
-    print("수정된", _target, "의 미끼 개수: ", ws.cell(_row, c_money).value)
-    
-    saveFile()
-
-def checkBait(_row):
-    print("user.py - checkBait")
-    loadFile()
-
-    print("미끼를 탐색")
-    
-    result = int(ws.cell(_row, c_bait).value)
-    print("보유 미끼 수량: ", result)
-
-    # 미끼가 있을 경우
-    if result:
-        return False
-    
-    return True
-
-def delBait(_target, _row):
-    print("user.py - delBait")
-    loadFile()
-    print("낚시: 미끼 1개 사용")
-    ws.cell(_row, c_bait).value -= 1
-
-    print("수정된", _target, "의 미끼 개수: ", ws.cell(_row, c_money).value)
-    
-    saveFile()
-
 #=========================Coin==================================
 
 def getDollar(_name, _row):
@@ -606,30 +577,207 @@ def modifyCoin(_target, _row, _amount, _coin):
     saveFile()
 
 
-#=========================GrapsOfTheUndying==================================
+#=========================ITEM==================================
+def checkBait(_row):
+    print("user.py - checkBait")
+    loadFile()
+
+    print("미끼를 탐색")
+    
+    result = int(ws.cell(_row, c_bait).value)
+    print("보유 미끼 수량: ", result)
+
+    # 미끼가 있을 경우
+    if result:
+        return False
+    
+    return True
+
 def checkGrap(_row):
     print("user.py - checkGrap")
     loadFile()
+    print("착취 개수 조회")
     result = ws.cell(_row, c_graps).value
+    print("조회 완료")
     saveFile()
     return result
 
-def addGrap(_name, _row, _amount):
-    print("user.py - addGrap")
+def countKC(_row):
+    print("user.py - countKC")
     loadFile()
-    print(_name, "에게 착취 사용권을 1개 추가합니다: ")
-    ws.cell(_row, c_graps).value += int(_amount)
-
-    print("추가 완료")
-    
+    print("협박 개수 조회")
+    result = ws.cell(_row, c_kc).value
+    print("조회 완료")
     saveFile()
 
-def rmGrap(_row):
-    print("user.py - addGrap")
-    loadFile()
-    print("착취 사용권을 1개를 사용합니다")
-    ws.cell(_row, c_graps).value -= 1
+    return result
 
-    print("사용 완료")
+def checkKC(_row):
+    print("user.py - checkKC")
+    loadFile()
+    print("협박 개수 조회")
+    result = ws.cell(_row, c_kc).value
+    print("조회 완료")
+    saveFile()
     
+    if result:
+        return False
+    
+    return True
+
+def checkRKC(_row):
+    print("user.py - checRKC")
+    loadFile()
+    print("협박 개수 조회")
+    result = ws.cell(_row, c_rkc).value
+    print("조회 완료")
+    saveFile()
+    
+    if result:
+        return True
+    
+    return False
+
+def checkVita(_row):
+    print("user.py - checkVita")
+    loadFile()
+    print("비타민 조회")
+    result = ws.cell(_row, c_vitamin).value
+    print("조회 성공")
+    saveFile()
+
+    if result:
+        return False
+    
+    return True
+
+def checkBK(_row):
+    print("user.py - checkBK")
+    loadFile()
+    print("바지락칼국수 조회")
+    result = ws.cell(_row, c_bk).value
+    print("조회 성공")
+    saveFile()
+
+    if result:
+        return False
+    
+    return True
+
+def checkWIS(_row):
+    print("user.py - checkWIS")
+    loadFile()
+    print("위스키 조회")
+    result = ws.cell(_row, c_wisky).value
+    print("조회 성공")
+    saveFile()
+
+    if result:
+        return False
+    
+    return True
+
+def checkOE(_row):
+    print("user.py - checkOE")
+    loadFile()
+    print("타조알 조회")
+    result = ws.cell(_row, c_ostrich).value
+    print("조회 성공")
+    saveFile()
+
+    if result:
+        return True
+    
+    return False
+    
+
+def threat(_name, _row):
+    print("user.py - threat")
+    loadFile()
+    ws.cell(_row,c_rkc).value += 1
+    saveFile()
+    print("성공")
+
+def addRKC(_row):
+    print("user.py - addRKC")
+    loadFile()
+    ws.cell(_row,c_rkc).value += 1
+    saveFile()
+
+def delRKC(_row):
+    print("user.py - delRKC")
+    loadFile()
+    ws.cell(_row,c_rkc).value -= 1
+    saveFile()
+
+def openOE():
+    n = randint(1,100)
+    if 1 <= n <= 40:
+        result = "fail"
+        url = "https://i.imgur.com/1In7USq.png"
+    elif 41 <= n <= 50:
+        result = "낙동강타조알"
+        url = "https://i.imgur.com/zzW8cHS.jpg"
+    elif 51 <= n <= 57:
+        result = "강동완의발포비타민"
+        url = "https://i.imgur.com/TmLMVLP.jpg"
+    elif 58 <= n <= 64:
+        result = "바지락칼국수"
+        url = "https://i.imgur.com/ejBBFJm.jpg"
+    elif 65 <= n <= 66:
+        result = "고승환의 커터칼"
+        url = "https://i.imgur.com/UBSG3DT.jpg"
+    elif 67 <= n <= 76:
+        result = "빡친 타조"
+        url = "https://i.imgur.com/YUeLEz6.jpg"
+    elif 77 <= n <= 92:
+        result = "미끼"
+        url = "https://i.imgur.com/P3vA4iV.jpg"
+    elif 93 <= n <= 99:
+        result = "열구의위스키"
+        url = "https://i.imgur.com/luLEIYm.jpg"
+    else:
+        result = "착취의 손아귀"
+        url = "https://i.imgur.com/cFFk2oA.jpg"
+
+    return result, url
+
+def addItem(_row, _item, _amount):
+    print("user.py - addItme")
+    loadFile()
+    if _item == "미끼":
+        ws.cell(_row,c_bait).value += _amount
+    if _item == "열구의위스키":
+        ws.cell(_row,c_wisky).value += _amount*3
+    if _item == "강동완의발포비타민":
+        ws.cell(_row, c_vitamin).value += _amount*5
+    if _item == "바지락칼국수":
+        ws.cell(_row, c_bk).value += _amount*2
+    if _item == "낙동강타조알":
+        ws.cell(_row, c_ostrich).value += _amount
+    if _item == "착취의 손아귀":
+        ws.cell(_row, c_graps).value += _amount
+    if _item == "고승환의 커터칼":
+        ws.cell(_row, c_kc).value += _amount
+    print("추가 완료")
+    saveFile()
+
+def rmItem(_row, _item):
+    print("user.py - rmItem")
+    loadFile()
+    if _item == "미끼":
+        ws.cell(_row,c_bait).value -= 1
+    if _item == "열구의위스키":
+        ws.cell(_row,c_wisky).value -= 1
+    if _item == "강동완의발포비타민":
+        ws.cell(_row, c_vitamin).value -= 1
+    if _item == "바지락칼국수":
+        ws.cell(_row, c_bk).value -= 1
+    if _item == "낙동강타조알":
+        ws.cell(_row, c_ostrich).value -= 1
+    if _item == "착취의 손아귀":
+        ws.cell(_row, c_graps).value -= 1
+    if _item == "고승환의 커터칼":
+        ws.cell(_row, c_kc).value -= 1
+    print("제거 완료")
     saveFile()
